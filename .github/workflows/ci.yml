@@ -128,9 +128,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}-latest
 
-    outputs:
-      pydantic-version: ${{ steps.pydantic-version.outputs.version }}
-
     steps:
     - uses: actions/checkout@v3
 
@@ -147,8 +144,7 @@ jobs:
 
     - run: pip freeze
 
-    - id: pydantic-version
-      run: python -c "import pydantic.version; print(f'{version=pydantic.version.version_info()}')" >> "$GITHUB_OUTPUT"
+    - run: 'python -c "import pydantic.version; print(pydantic.version.version_info())"'
 
     - run: mkdir coverage
 
@@ -325,6 +321,8 @@ jobs:
     # `always()` is required to trigger this task even though test-fastapi is skipped
     if: "always() && needs.check.outputs.result == 'success' && startsWith(github.ref, 'refs/tags/')"
     runs-on: ubuntu-latest
+    outputs:
+      pydantic-version: ${{ steps.check-tag.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v3
@@ -373,7 +371,7 @@ jobs:
   send-tweet:
     name: Send tweet
     runs-on: ubuntu-latest
-    needs: [deploy, test]
+    needs: [deploy]
     if: ${{ needs.deploy.status == 'OK' }}
 
     steps:
@@ -394,13 +392,13 @@ jobs:
               consumer_key=os.getenv("TWITTER_CONSUMER_KEY"),
               consumer_secret=os.getenv("TWITTER_CONSUMER_SECRET"),
           )
-          tweet = base64.b64decode(os.environ["TWEET"].format()).decode("utf-8")
+          tweet = base64.b64decode(os.environ["TWEET"]).decode("utf-8")
           client.create_tweet(text=tweet)
         env:
           TWEET: |
-            Pydantic version ${{needs.test.outputs.pydantic-version}} is out! 🎉
+            Pydantic version ${{needs.deploy.outputs.pydantic-version}} is out! 🎉
 
-            https://github.com/pydantic/pydantic-settings/releases/tag/v${{needs.test.outputs.pydantic-version}}
+            https://github.com/pydantic/pydantic-settings/releases/tag/v${{needs.deploy.outputs.pydantic-version}}
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
