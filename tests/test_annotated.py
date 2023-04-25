@@ -6,7 +6,8 @@ from annotated_types import BaseMetadata, GroupedMetadata, Gt, Lt
 from pydantic_core import core_schema
 from typing_extensions import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validate_call
+from pydantic.annotated_arguments import SkipValidation
 from pydantic.errors import PydanticSchemaGenerationError
 from pydantic.fields import Undefined
 
@@ -285,3 +286,11 @@ def test_get_pydantic_core_schema_source_type() -> None:
 
     assert types == {GenericModel[int]}
     types.clear()
+
+
+def test_skip_validation():
+    @validate_call
+    def my_function(x: int, y: Annotated[int, SkipValidation]) -> tuple[str, str]:
+        return (repr(x), repr(y))
+
+    assert my_function('1', '2') == ('1', "'2'")

@@ -105,3 +105,16 @@ class WrapSerializer:
             when_used=self.when_used,
         )
         return schema
+
+
+class SkipValidation:
+    """
+    If this is applied as an annotation (e.g., via `x: Annotated[int, SkipValidation]`), validation will be skipped.
+
+    This can be useful if you want to use a type annotation for documentation/IDE/type-checking purposes,
+    and know that it is safe to skip validation for one or more of the fields.
+    """
+
+    @classmethod
+    def __get_pydantic_core_schema__(self, _source: Any, _handler: Any) -> core_schema.CoreSchema:
+        return core_schema.any_schema()
