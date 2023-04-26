@@ -290,7 +290,7 @@ def test_get_pydantic_core_schema_source_type() -> None:
 
 def test_skip_validation():
     @validate_call
-    def my_function(x: int, y: Annotated[int, SkipValidation]) -> tuple[str, str]:
-        return (repr(x), repr(y))
+    def my_function(x: int, y: Annotated[int, SkipValidation]):
+        return repr(x), repr(y)
 
     assert my_function('1', '2') == ('1', "'2'")
