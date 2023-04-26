@@ -15,10 +15,12 @@ from typing import (
     Generic,
     Iterable,
     List,
+    Mapping,
     NamedTuple,
     NewType,
     Optional,
     Pattern,
+    Sequence,
     Set,
     Tuple,
     Type,
@@ -3613,3 +3615,55 @@ def test_get_pydantic_core_schema_calls() -> None:
     ]
 
     calls.clear()
+
+
+def test_validate_json_raises_if_json_schema_raises():
+    class Model(BaseModel):
+        int_seq: Sequence[int]
+
+    with pytest.raises(PydanticInvalidForJsonSchema) as e_json_schema:
+        Model.model_json_schema()
+    with pytest.raises(PydanticInvalidForJsonSchema) as e_validate_json:
+        Model.model_validate_json('{}')
+
+    assert e_json_schema.value.errors() == e_validate_json.value.errors()
+
+
+@pytest.mark.parametrize(('sequence_type',), [pytest.param(list), pytest.param(Sequence)])
+def test_sequences_int_json_schema(sequence_type):
+    class Model(BaseModel):
+        int_seq: sequence_type[int]
+
+    assert Model.model_json_schema() == {
+        'title': 'Model',
+        'type': 'object',
+        'properties': {
+            'int_seq': {
+                'title': 'Int Seq',
+                'type': 'array',
+                'items': {'type': 'integer'},
+            },
+        },
+        'required': ['int_seq'],
+    }
+    assert Model.model_validate_json('{"int_seq": [1, 2, 3]}')
+
+
+@pytest.mark.parametrize(('mapping_type',), [pytest.param(dict), pytest.param(Mapping)])
+def test_mappings_str_int_json_schema(mapping_type: type):
+    class Model(BaseModel):
+        str_int_map: mapping_type[str, int]
+
+    print(Model.model_json_schema())
+    assert Model.model_json_schema() == {
+        'title': 'Model',
+        'type': 'object',
+        'properties': {
+            'str_int_map': {
+                'title': 'Str Int Map',
+                'type': 'object',
+                'additionalProperties': {'type': 'integer'},
+            }
+        },
+        'required': ['str_int_map'],
+    }
