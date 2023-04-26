@@ -116,5 +116,5 @@ class SkipValidation:
     """
 
     @classmethod
-    def __get_pydantic_core_schema__(self, _source: Any, _handler: Any) -> core_schema.CoreSchema:
+    def __get_pydantic_core_schema__(cls, _source: Any, _handler: Any) -> core_schema.CoreSchema:
         return core_schema.any_schema()
