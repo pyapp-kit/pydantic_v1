@@ -43,6 +43,8 @@ from pydantic import (
     UUID5,
     AnalyzedType,
     AwareDatetime,
+    Base64Bytes,
+    Base64Str,
     BaseModel,
     ByteSize,
     ConfigDict,
@@ -4351,3 +4353,39 @@ def test_custom_generic_containers():
             'type': 'int_parsing',
         }
     ]
+
+
+@pytest.mark.parametrize(
+    ('field_type', 'input_data', 'expected_value', 'serialized_data'),
+    [
+        pytest.param(Base64Bytes, b'Zm9vIGJhcg==\n', b'foo bar', b'Zm9vIGJhcg==\n', id='Base64Bytes-reversible'),
+        pytest.param(Base64Str, 'Zm9vIGJhcg==\n', 'foo bar', 'Zm9vIGJhcg==\n', id='Base64Str-reversible'),
+        pytest.param(Base64Bytes, b'Zm9vIGJhcg==', b'foo bar', b'Zm9vIGJhcg==\n', id='Base64Bytes-bytes-input'),
+        pytest.param(Base64Bytes, 'Zm9vIGJhcg==', b'foo bar', b'Zm9vIGJhcg==\n', id='Base64Bytes-str-input'),
+        pytest.param(
+            Base64Bytes, bytearray(b'Zm9vIGJhcg=='), b'foo bar', b'Zm9vIGJhcg==\n', id='Base64Bytes-bytearray-input'
+        ),
+        pytest.param(
+            Base64Bytes, memoryview(b'Zm9vIGJhcg=='), b'foo bar', b'Zm9vIGJhcg==\n', id='Base64Bytes-memoryview-input'
+        ),
+        pytest.param(Base64Str, b'Zm9vIGJhcg==', 'foo bar', 'Zm9vIGJhcg==\n', id='Base64Str-bytes-input'),
+        pytest.param(Base64Str, 'Zm9vIGJhcg==', 'foo bar', 'Zm9vIGJhcg==\n', id='Base64Str-str-input'),
+        pytest.param(
+            Base64Str, bytearray(b'Zm9vIGJhcg=='), 'foo bar', 'Zm9vIGJhcg==\n', id='Base64Str-bytearray-input'
+        ),
+        pytest.param(
+            Base64Str, memoryview(b'Zm9vIGJhcg=='), 'foo bar', 'Zm9vIGJhcg==\n', id='Base64Str-memoryview-input'
+        ),
+    ],
+)
+def test_base64(field_type, input_data, expected_value, serialized_data):
+    class Model(BaseModel):
+        base64_value: field_type
+
+    m = Model(base64_value=input_data)
+    assert m.base64_value == expected_value
+
+    m = Model.model_construct(base64_value=expected_value)
+    assert m.base64_value == expected_value
+
+    assert m.model_dump() == {'base64_value': serialized_data}

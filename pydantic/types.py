@@ -1,6 +1,7 @@
 from __future__ import annotations as _annotations
 
 import abc
+import base64
 import dataclasses as _dataclasses
 import re
 from datetime import date, datetime
@@ -16,6 +17,7 @@ from typing import (
     Generic,
     Hashable,
     List,
+    Protocol,
     Set,
     TypeVar,
     cast,
@@ -26,7 +28,7 @@ import annotated_types
 from pydantic_core import PydanticCustomError, PydanticKnownError, core_schema
 from typing_extensions import Annotated, Literal
 
-from ._internal import _fields, _validators
+from ._internal import _fields, _internal_dataclass, _validators
 from ._migration import getattr_migration
 
 __all__ = [
@@ -73,6 +75,10 @@ __all__ = [
     'AwareDatetime',
     'NaiveDatetime',
     'AllowInfNan',
+    'EncodedBytes',
+    'EncodedStr',
+    'Base64Bytes',
+    'Base64Str',
 ]
 
 from ._internal._core_metadata import build_metadata_dict
@@ -869,5 +875,93 @@ else:
         def __repr__(self) -> str:
             return 'NaiveDatetime'
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Encoded TYPES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+class EncoderProtocol(Protocol):
+    @classmethod
+    def decode(cls, data: bytes) -> bytes:
+        ...
+
+    @classmethod
+    def encode(cls, value: bytes) -> bytes:
+        ...
+
+    @classmethod
+    def get_json_format(cls) -> str:
+        ...
+
+
+class Base64Encoder(EncoderProtocol):
+    @classmethod
+    def decode(cls, data: bytes) -> bytes:
+        return base64.decodebytes(data)
+
+    @classmethod
+    def encode(cls, value: bytes) -> bytes:
+        return base64.encodebytes(value)
+
+    @classmethod
+    def get_json_format(cls) -> str:
+        return 'base64'
+
+
+@_internal_dataclass.slots_dataclass
+class EncodedBytes:
+    encoder: type[EncoderProtocol]
+
+    def __get_pydantic_json_schema__(
+        self, core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        field_schema = handler(core_schema)
+        field_schema.update(type='string', format=self.encoder.get_json_format())
+        return field_schema
+
+    def __get_pydantic_core_schema__(
+        self, source: type[Any], handler: Callable[[Any], core_schema.CoreSchema]
+    ) -> core_schema.CoreSchema:
+        return core_schema.general_before_validator_function(
+            function=self.validate_before,
+            schema=core_schema.chain_schema(
+                steps=[
+                    core_schema.general_plain_validator_function(self.validate),
+                    core_schema.bytes_schema(),
+                ]
+            ),
+            serialization=core_schema.plain_serializer_function_ser_schema(function=self.serialize),
+        )
+
+    def validate_before(self, value: bytes | str, _: core_schema.ValidationInfo) -> bytes:
+        if isinstance(value, str):
+            value = value.encode()
+        return value
+
+    def validate(self, data: bytes, _: core_schema.ValidationInfo) -> bytes:
+        return self.encoder.decode(data)
+
+    def serialize(self, value: bytes) -> bytes:
+        return self.encoder.encode(value)
+
+
+class EncodedStr(EncodedBytes):
+    def __get_pydantic_core_schema__(
+        self, source: type[Any], handler: Callable[[Any], core_schema.CoreSchema]
+    ) -> core_schema.CoreSchema:
+        return core_schema.general_after_validator_function(
+            function=self.validate_after,
+            schema=super().__get_pydantic_core_schema__(source=source, handler=handler),
+            serialization=core_schema.plain_serializer_function_ser_schema(function=self.serialize_str),
+        )
+
+    def validate_after(self, data: bytes, _: core_schema.ValidationInfo) -> str:
+        return data.decode()
+
+    def serialize_str(self, value: str) -> str:
+        return super().serialize(value=value.encode()).decode()
+
+
+Base64Bytes = Annotated[bytes, EncodedBytes(encoder=Base64Encoder)]
+Base64Str = Annotated[str, EncodedStr(encoder=Base64Encoder)]
 
 __getattr__ = getattr_migration(__name__)
