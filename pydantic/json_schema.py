@@ -27,9 +27,8 @@ from weakref import WeakKeyDictionary
 import pydantic_core
 from typing_extensions import Literal
 
-from pydantic._internal._json_schema_shared import GenerateJsonSchemaHandler
-
 from ._internal import _core_metadata, _core_utils, _json_schema_shared, _typing_extra
+from ._internal._json_schema_shared import GenerateJsonSchemaHandler
 from .errors import PydanticInvalidForJsonSchema, PydanticUserError
 
 if TYPE_CHECKING:
