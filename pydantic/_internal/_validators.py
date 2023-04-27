@@ -58,7 +58,7 @@ def sequence_validator(
     """
     value_type = type(__input_value)
 
-    # we don't accept any plain string as a sequence
+    # We don't accept any plain string as a sequence
     # Relevant issue: https://github.com/pydantic/pydantic/issues/5595
     if issubclass(value_type, (str, bytes)):
         raise PydanticCustomError(
