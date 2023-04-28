@@ -9,7 +9,7 @@ try:
     from mypy import api as mypy_api
     from mypy.version import __version__ as mypy_version
 
-    from pydantic.mypy import parse_mypy_version
+    from pydantic_v1.mypy import parse_mypy_version
 except ImportError:
     mypy_api = None
     mypy_version = None
@@ -121,11 +121,11 @@ def test_success_cases_run(module: str) -> None:
 
 
 def test_explicit_reexports():
-    from pydantic import __all__ as root_all
-    from pydantic.main import __all__ as main
-    from pydantic.networks import __all__ as networks
-    from pydantic.tools import __all__ as tools
-    from pydantic.types import __all__ as types
+    from pydantic_v1 import __all__ as root_all
+    from pydantic_v1.main import __all__ as main
+    from pydantic_v1.networks import __all__ as networks
+    from pydantic_v1.tools import __all__ as tools
+    from pydantic_v1.types import __all__ as types
 
     for name, export_all in [('main', main), ('network', networks), ('tools', tools), ('types', types)]:
         for export in export_all:
@@ -133,10 +133,10 @@ def test_explicit_reexports():
 
 
 def test_explicit_reexports_exist():
-    import pydantic
+    import pydantic_v1
 
-    for name in pydantic.__all__:
-        assert hasattr(pydantic, name), f'{name} is in pydantic.__all__ but missing from pydantic'
+    for name in pydantic_v1.__all__:
+        assert hasattr(pydantic_v1, name), f'{name} is in pydantic_v1.__all__ but missing from pydantic'
 
 
 @pytest.mark.skipif(mypy_version is None, reason='mypy is not installed')

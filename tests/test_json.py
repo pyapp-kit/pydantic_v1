@@ -12,11 +12,11 @@ from uuid import UUID
 
 import pytest
 
-from pydantic import BaseModel, NameEmail, create_model
-from pydantic.color import Color
-from pydantic.dataclasses import dataclass as pydantic_dataclass
-from pydantic.json import pydantic_encoder, timedelta_isoformat
-from pydantic.types import ConstrainedDecimal, DirectoryPath, FilePath, SecretBytes, SecretStr
+from pydantic_v1 import BaseModel, NameEmail, create_model
+from pydantic_v1.color import Color
+from pydantic_v1.dataclasses import dataclass as pydantic_dataclass
+from pydantic_v1.json import pydantic_encoder, timedelta_isoformat
+from pydantic_v1.types import ConstrainedDecimal, DirectoryPath, FilePath, SecretBytes, SecretStr
 
 
 class MyEnum(Enum):

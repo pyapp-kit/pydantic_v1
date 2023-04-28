@@ -5,9 +5,9 @@ from uuid import UUID, uuid4
 import pytest
 from typing_extensions import Literal
 
-from pydantic import UUID1, BaseConfig, BaseModel, PydanticTypeError, ValidationError, conint, errors, validator
-from pydantic.error_wrappers import flatten_errors, get_exc_type
-from pydantic.errors import StrRegexError
+from pydantic_v1 import UUID1, BaseConfig, BaseModel, PydanticTypeError, ValidationError, conint, errors, validator
+from pydantic_v1.error_wrappers import flatten_errors, get_exc_type
+from pydantic_v1.errors import StrRegexError
 
 
 def test_pydantic_error():

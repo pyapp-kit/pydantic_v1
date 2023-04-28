@@ -2,12 +2,12 @@ from ipaddress import IPv4Address, IPv4Interface, IPv4Network, IPv6Address, IPv6
 
 import pytest
 
-from pydantic import BaseModel, IPvAnyAddress, IPvAnyInterface, IPvAnyNetwork, ValidationError
+from pydantic_v1 import BaseModel, IPvAnyAddress, IPvAnyInterface, IPvAnyNetwork, ValidationError
 
 #
 # ipaddress.IPv4Address
 # ipaddress.IPv6Address
-# pydantic.IPvAnyAddress
+# pydantic_v1.IPvAnyAddress
 #
 
 
@@ -193,7 +193,7 @@ def test_ipv6address_fails(value, errors):
 #
 # ipaddress.IPv4Network
 # ipaddress.IPv6Network
-# pydantic.IPvAnyNetwork
+# pydantic_v1.IPvAnyNetwork
 #
 
 
@@ -349,7 +349,7 @@ def test_ip_v6_network_fails(value, errors):
 #
 # ipaddress.IPv4Interface
 # ipaddress.IPv6Interface
-# pydantic.IPvAnyInterface
+# pydantic_v1.IPvAnyInterface
 #
 
 

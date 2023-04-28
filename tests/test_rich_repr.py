@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
-from pydantic.color import Color
+from pydantic_v1 import BaseModel
+from pydantic_v1.color import Color
 
 
 class User(BaseModel):

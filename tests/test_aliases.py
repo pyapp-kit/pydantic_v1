@@ -4,8 +4,8 @@ from typing import Any, ContextManager, List, Optional
 
 import pytest
 
-from pydantic import BaseConfig, BaseModel, Extra, ValidationError
-from pydantic.fields import Field
+from pydantic_v1 import BaseConfig, BaseModel, Extra, ValidationError
+from pydantic_v1.fields import Field
 
 
 def test_alias_generator():

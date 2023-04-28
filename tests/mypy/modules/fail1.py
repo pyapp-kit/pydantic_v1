@@ -4,8 +4,8 @@ Test mypy failure with missing attribute
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, NoneStr
-from pydantic.types import Json
+from pydantic_v1 import BaseModel, NoneStr
+from pydantic_v1.types import Json
 
 
 class Model(BaseModel):

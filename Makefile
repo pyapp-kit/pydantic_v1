@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-sources = pydantic tests docs/build
+sources = pydantic_v1 tests docs/build
 isort = isort $(sources)
 black = black -S -l 120 --target-version py38 $(sources)
 
@@ -54,11 +54,11 @@ check-dist:
 
 .PHONY: mypy
 mypy:
-	mypy pydantic docs/build
+	mypy pydantic_v1 docs/build
 
 .PHONY: pyupgrade
 pyupgrade:
-	pyupgrade --py37-plus `find pydantic tests -name "*.py" -type f`
+	pyupgrade --py37-plus `find pydantic_v1 tests -name "*.py" -type f`
 
 .PHONY: pyright
 pyright:
@@ -66,7 +66,7 @@ pyright:
 
 .PHONY: test
 test:
-	pytest --cov=pydantic
+	pytest --cov=pydantic_v1
 
 .PHONY: testcov
 testcov: test
@@ -106,7 +106,7 @@ clean:
 	rm -f .coverage.*
 	rm -rf build
 	rm -rf dist
-	rm -f pydantic/*.c pydantic/*.so
+	rm -f pydantic_v1/*.c pydantic_v1/*.so
 	python setup.py clean
 	rm -rf site
 	rm -rf docs/_build

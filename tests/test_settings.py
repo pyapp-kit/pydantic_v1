@@ -7,8 +7,8 @@ from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Union
 
 import pytest
 
-from pydantic import BaseModel, BaseSettings, Field, HttpUrl, NoneStr, SecretStr, ValidationError, dataclasses
-from pydantic.env_settings import (
+from pydantic_v1 import BaseModel, BaseSettings, Field, HttpUrl, NoneStr, SecretStr, ValidationError, dataclasses
+from pydantic_v1.env_settings import (
     EnvSettingsSource,
     InitSettingsSource,
     SecretsSettingsSource,

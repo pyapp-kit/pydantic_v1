@@ -31,7 +31,7 @@ from uuid import UUID
 import pytest
 from typing_extensions import Literal, TypedDict
 
-from pydantic import (
+from pydantic_v1 import (
     UUID1,
     UUID3,
     UUID4,
@@ -77,8 +77,8 @@ from pydantic import (
     errors,
     validator,
 )
-from pydantic.types import SecretField
-from pydantic.typing import NoneType
+from pydantic_v1.types import SecretField
+from pydantic_v1.typing import NoneType
 
 try:
     import email_validator

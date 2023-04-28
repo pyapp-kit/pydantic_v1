@@ -3,9 +3,9 @@ from typing import Any
 
 import pytest
 
-from pydantic import BaseModel, ValidationError
-from pydantic.errors import InvalidLengthForBrand, LuhnValidationError, NotDigitError
-from pydantic.types import PaymentCardBrand, PaymentCardNumber
+from pydantic_v1 import BaseModel, ValidationError
+from pydantic_v1.errors import InvalidLengthForBrand, LuhnValidationError, NotDigitError
+from pydantic_v1.types import PaymentCardBrand, PaymentCardNumber
 
 VALID_AMEX = '370000000000002'
 VALID_MC = '5100000000000003'

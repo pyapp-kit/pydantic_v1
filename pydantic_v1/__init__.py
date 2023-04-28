@@ -18,7 +18,7 @@ from .version import VERSION, compiled
 __version__ = VERSION
 
 # WARNING __all__ from .errors is not included here, it will be removed as an export here in v2
-# please use "from pydantic.errors import ..." instead
+# please use "from pydantic_v1.errors import ..." instead
 __all__ = [
     # annotated types utils
     'create_model_from_namedtuple',

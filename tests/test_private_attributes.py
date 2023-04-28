@@ -2,9 +2,9 @@ from typing import ClassVar, Generic, TypeVar
 
 import pytest
 
-from pydantic import BaseModel, Extra, PrivateAttr
-from pydantic.fields import Undefined
-from pydantic.generics import GenericModel
+from pydantic_v1 import BaseModel, Extra, PrivateAttr
+from pydantic_v1.fields import Undefined
+from pydantic_v1.generics import GenericModel
 
 
 def test_private_attribute():

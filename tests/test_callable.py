@@ -3,7 +3,7 @@ from typing import Callable
 
 import pytest
 
-from pydantic import BaseModel, ValidationError
+from pydantic_v1 import BaseModel, ValidationError
 
 collection_callable_types = [Callable, Callable[[int], int]]
 if sys.version_info >= (3, 9):

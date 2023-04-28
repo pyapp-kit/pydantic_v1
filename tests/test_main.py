@@ -21,7 +21,7 @@ from uuid import UUID, uuid4
 import pytest
 from typing_extensions import Annotated
 
-from pydantic import (
+from pydantic_v1 import (
     BaseConfig,
     BaseModel,
     ConfigError,
@@ -37,7 +37,7 @@ from pydantic import (
     root_validator,
     validator,
 )
-from pydantic.typing import Final, Literal
+from pydantic_v1.typing import Final, Literal
 
 
 def test_success():
@@ -1309,7 +1309,7 @@ def test_parse_obj_nested_root():
 
 
 def test_untouched_types():
-    from pydantic import BaseModel
+    from pydantic_v1 import BaseModel
 
     class _ClassPropertyDescriptor:
         def __init__(self, getter):
@@ -1333,7 +1333,7 @@ def test_untouched_types():
 
 
 def test_custom_types_fail_without_keep_untouched():
-    from pydantic import BaseModel
+    from pydantic_v1 import BaseModel
 
     class _ClassPropertyDescriptor:
         def __init__(self, getter):
@@ -1801,7 +1801,7 @@ def test_custom_init_subclass_params():
             cls.something = something
 
     # if this raises a TypeError, then there is a regression of issue 867:
-    # pydantic.main.MetaModel.__new__ should include **kwargs at the end of the
+    # pydantic_v1.main.MetaModel.__new__ should include **kwargs at the end of the
     # method definition and pass them on to the super call at the end in order
     # to allow the special method __init_subclass__ to be defined with custom
     # parameters on extended BaseModel classes.

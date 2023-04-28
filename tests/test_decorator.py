@@ -8,9 +8,9 @@ from typing import List
 import pytest
 from typing_extensions import Annotated, TypedDict
 
-from pydantic import BaseModel, Extra, Field, ValidationError, validate_arguments
-from pydantic.decorator import ValidatedFunction
-from pydantic.errors import ConfigError
+from pydantic_v1 import BaseModel, Extra, Field, ValidationError, validate_arguments
+from pydantic_v1.decorator import ValidatedFunction
+from pydantic_v1.errors import ConfigError
 
 skip_pre_38 = pytest.mark.skipif(sys.version_info < (3, 8), reason='testing >= 3.8 behaviour only')
 
@@ -166,7 +166,7 @@ def test_positional_only(create_module):
     module = create_module(
         # language=Python
         """
-from pydantic import validate_arguments
+from pydantic_v1 import validate_arguments
 
 @validate_arguments
 def foo(a, b, /, c=None):
@@ -451,7 +451,7 @@ def test_validate_all_positional(create_module):
         """
 from datetime import datetime
 
-from pydantic import Field, validate_arguments
+from pydantic_v1 import Field, validate_arguments
 
 @validate_arguments(config=dict(validate_all=True))
 def foo(dt: datetime = Field(default_factory=lambda: 946684800), /):

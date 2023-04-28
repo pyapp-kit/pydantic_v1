@@ -65,7 +65,7 @@ from mypy.typevars import fill_typevars
 from mypy.util import get_unique_redefinition_name
 from mypy.version import __version__ as mypy_version
 
-from pydantic.utils import is_valid_field
+from pydantic_v1.utils import is_valid_field
 
 try:
     from mypy.types import TypeVarDef  # type: ignore[attr-defined]
@@ -75,11 +75,11 @@ except ImportError:  # pragma: no cover
 
 CONFIGFILE_KEY = 'pydantic-mypy'
 METADATA_KEY = 'pydantic-mypy-metadata'
-BASEMODEL_FULLNAME = 'pydantic.main.BaseModel'
-BASESETTINGS_FULLNAME = 'pydantic.env_settings.BaseSettings'
-MODEL_METACLASS_FULLNAME = 'pydantic.main.ModelMetaclass'
-FIELD_FULLNAME = 'pydantic.fields.Field'
-DATACLASS_FULLNAME = 'pydantic.dataclasses.dataclass'
+BASEMODEL_FULLNAME = 'pydantic_v1.main.BaseModel'
+BASESETTINGS_FULLNAME = 'pydantic_v1.env_settings.BaseSettings'
+MODEL_METACLASS_FULLNAME = 'pydantic_v1.main.ModelMetaclass'
+FIELD_FULLNAME = 'pydantic_v1.fields.Field'
+DATACLASS_FULLNAME = 'pydantic_v1.dataclasses.dataclass'
 
 
 def parse_mypy_version(version: str) -> Tuple[int, ...]:
@@ -134,7 +134,7 @@ class PydanticPlugin(Plugin):
         return None
 
     def get_class_decorator_hook(self, fullname: str) -> Optional[Callable[[ClassDefContext], None]]:
-        """Mark pydantic.dataclasses as dataclass.
+        """Mark pydantic_v1.dataclasses as dataclass.
 
         Mypy version 1.1.1 added support for `@dataclass_transform` decorator.
         """
@@ -326,7 +326,7 @@ class PydanticModelTransformer:
         }
 
     def adjust_validator_signatures(self) -> None:
-        """When we decorate a function `f` with `pydantic.validator(...), mypy sees
+        """When we decorate a function `f` with `pydantic_v1.validator(...), mypy sees
         `f` as a regular method taking a `self` instance, even though pydantic
         internally wraps `f` with `classmethod` if necessary.
 
@@ -339,7 +339,7 @@ class PydanticModelTransformer:
                 if (
                     isinstance(first_dec, CallExpr)
                     and isinstance(first_dec.callee, NameExpr)
-                    and first_dec.callee.fullname == 'pydantic.class_validators.validator'
+                    and first_dec.callee.fullname == 'pydantic_v1.class_validators.validator'
                 ):
                     sym.node.func.is_class = True
 
@@ -637,7 +637,7 @@ class PydanticModelTransformer:
         if not (
             isinstance(expr, CallExpr) and isinstance(expr.callee, RefExpr) and expr.callee.fullname == FIELD_FULLNAME
         ):
-            # Assigned value is not a call to pydantic.fields.Field
+            # Assigned value is not a call to pydantic_v1.fields.Field
             return None, False
 
         for i, arg_name in enumerate(expr.arg_names):

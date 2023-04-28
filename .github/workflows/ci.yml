@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 1.10.X-fixes
+      - pydantic_v1
     tags:
       - '**'
   pull_request: {}
@@ -62,78 +63,7 @@ jobs:
       - run: npm install -g pyright
 
       - run: make pyright
-
-  docs-build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: set up python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - uses: actions/cache@v3
-      id: cache
-      with:
-        path: ${{ env.pythonLocation }}
-        key: >
-          docs-build-v2
-          ${{ runner.os }}
-          ${{ env.pythonLocation }}
-          ${{ hashFiles('setup.py') }}
-          ${{ hashFiles('requirements.txt') }}
-          ${{ hashFiles('docs/requirements.txt') }}
-
-    - name: install
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: make install-docs
-
-    - name: build site
-      run: make docs
-
-    - name: Store docs site
-      uses: actions/upload-artifact@v3
-      with:
-        name: docs
-        path: site
   
-  test-memray:
-    name: test memray
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: set up python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - uses: actions/cache@v3
-      id: cache
-      with:
-        path: ${{ env.pythonLocation }}
-        key: >
-          test-memray
-          ${{ runner.os }}
-          ${{ env.pythonLocation }}
-          ${{ hashFiles('setup.py') }}
-          ${{ hashFiles('requirements.txt') }}
-          ${{ hashFiles('tests/requirements-testing.txt') }}
-
-    - name: install
-      run: |
-        make install-testing
-        pip install pytest-memray==1.4.0
-
-    - name: compile
-      run: |
-        make build-trace
-        python -c "import sys, pydantic; print('compiled:', pydantic.compiled); sys.exit(0 if pydantic.compiled else 1)"
-
-    - name: test
-      run: pytest --ignore=tests/mypy/ --memray
-
   test-linux-compiled:
     name: test py${{ matrix.python-version }} on linux compiled
     runs-on: ubuntu-latest
@@ -171,9 +101,9 @@ jobs:
     - name: compile
       run: |
         make build-trace
-        python -c "import sys, pydantic; print('compiled:', pydantic.compiled); sys.exit(0 if pydantic.compiled else 1)"
+        python -c "import sys, pydantic_v1; print('compiled:', pydantic_v1.compiled); sys.exit(0 if pydantic_v1.compiled else 1)"
         ls -alh
-        ls -alh pydantic/
+        ls -alh pydantic_v1/
 
     - run: mkdir coverage
 
@@ -254,49 +184,8 @@ jobs:
         name: coverage
         path: coverage
 
-  test-old-mypy:
-    name: test mypy v${{ matrix.mypy-version }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        mypy-version: ['0.910', '0.921', '0.931', '0.942', '0.950', '0.960']
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: set up python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - name: install
-      run: |
-        make install-testing
-        pip freeze
-
-    - name: uninstall deps
-      run: pip uninstall -y mypy tomli toml
-
-    - name: install specific mypy version
-      run: pip install mypy==${{ matrix.mypy-version }}
-
-    - run: mkdir coverage
-
-    - name: run tests
-      run: pytest --cov=pydantic tests/mypy
-      env:
-        COVERAGE_FILE: coverage/.coverage.linux-py3.10-mypy${{ matrix.mypy-version }}
-        CONTEXT: linux-py3.10-mypy${{ matrix.mypy-version }}
-
-    - name: store coverage files
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage
-        path: coverage
-
   coverage-combine:
-    needs: [test-linux-compiled, test-not-compiled, test-old-mypy]
+    needs: [test-linux-compiled, test-not-compiled]
     runs-on: ubuntu-latest
 
     steps:
@@ -317,7 +206,7 @@ jobs:
       - run: ls -la coverage
       - run: coverage combine coverage
       - run: coverage report
-      - run: coverage html --show-contexts --title "pydantic coverage for ${{ github.sha }}"
+      - run: coverage html --show-contexts --title "pydantic_v1 coverage for ${{ github.sha }}"
 
       - name: Store coverage html
         uses: actions/upload-artifact@v3
@@ -408,10 +297,8 @@ jobs:
 
     needs:
       - lint
-      - docs-build
       - test-linux-compiled
       - test-not-compiled
-      - test-old-mypy
       - test-fastapi
       - build
 
@@ -474,12 +361,6 @@ jobs:
           name: pypi_files
           path: dist
 
-      - name: get docs
-        uses: actions/download-artifact@v3
-        with:
-          name: docs
-          path: site
-
       - name: install
         run: pip install -U twine packaging
 
@@ -497,12 +378,3 @@ jobs:
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.pypi_token }}
-
-      - name: publish docs
-        if: '!fromJSON(steps.check-tag.outputs.IS_PRERELEASE)'
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.cloudflare_api_token }}
-          command: pages publish --project-name=pydantic-docs --branch=main site
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.cloudflare_account_id }}

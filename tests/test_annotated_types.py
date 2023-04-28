@@ -11,7 +11,7 @@ from typing import List, NamedTuple, Optional, Tuple
 import pytest
 from typing_extensions import Annotated, NotRequired, Required, TypedDict
 
-from pydantic import BaseModel, Field, PositiveInt, ValidationError
+from pydantic_v1 import BaseModel, Field, PositiveInt, ValidationError
 
 if sys.version_info < (3, 9, 2):
     try:

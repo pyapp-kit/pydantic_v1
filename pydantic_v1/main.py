@@ -174,7 +174,7 @@ class ModelMetaclass(ABCMeta):
         def is_untouched(v: Any) -> bool:
             return isinstance(v, untouched_types) or v.__class__.__name__ == 'cython_function_or_method'
 
-        if (namespace.get('__module__'), namespace.get('__qualname__')) != ('pydantic.main', 'BaseModel'):
+        if (namespace.get('__module__'), namespace.get('__qualname__')) != ('pydantic_v1.main', 'BaseModel'):
             annotations = resolve_annotations(namespace.get('__annotations__', {}), namespace.get('__module__', None))
             # annotation only fields need to come first in fields
             for ann_name, ann_type in annotations.items():

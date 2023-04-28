@@ -3,7 +3,7 @@ from typing import Any, Iterable, Optional, Union
 
 from typing_extensions import Annotated
 
-from pydantic import BaseModel, Extra, Field, create_model
+from pydantic_v1 import BaseModel, Extra, Field, create_model
 
 
 def _equals(a: Union[str, Iterable[str]], b: Union[str, Iterable[str]]) -> bool:

@@ -5,8 +5,8 @@ from typing import Any, Callable as TypingCallable, Dict, ForwardRef, List, Name
 import pytest
 from typing_extensions import Annotated  # noqa: F401
 
-from pydantic import Field  # noqa: F401
-from pydantic.typing import Literal, convert_generics, is_namedtuple, is_none_type, is_typeddict
+from pydantic_v1 import Field  # noqa: F401
+from pydantic_v1.typing import Literal, convert_generics, is_namedtuple, is_none_type, is_typeddict
 
 try:
     from typing import TypedDict as typing_TypedDict

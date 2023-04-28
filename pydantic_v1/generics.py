@@ -350,7 +350,7 @@ def get_caller_frame_info() -> Tuple[Optional[str], bool]:
     """
     Used inside a function to check whether it was called globally
 
-    Will only work against non-compiled code, therefore used only in pydantic.generics
+    Will only work against non-compiled code, therefore used only in pydantic_v1.generics
 
     :returns Tuple[module_name, called_globally]
     """

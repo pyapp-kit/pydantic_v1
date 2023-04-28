@@ -17,7 +17,7 @@ The tricky part if for stdlib dataclasses that are converted after into pydantic
 class M:
     x: int
 
-ValidatedM = pydantic.dataclasses.dataclass(M)
+ValidatedM = pydantic_v1.dataclasses.dataclass(M)
 ```
 
 We indeed still want to support equality, hashing, repr, ... as if it was the stdlib one!
@@ -68,7 +68,7 @@ if TYPE_CHECKING:
         __pydantic_initialised__: ClassVar[bool]
         __pydantic_model__: ClassVar[Type[BaseModel]]
         __pydantic_validate_values__: ClassVar[Callable[['Dataclass'], None]]
-        __pydantic_has_field_info_default__: ClassVar[bool]  # whether a `pydantic.Field` is used as default value
+        __pydantic_has_field_info_default__: ClassVar[bool]  # whether a `pydantic_v1.Field` is used as default value
 
         def __init__(self, *args: object, **kwargs: object) -> None:
             pass
@@ -455,7 +455,7 @@ def is_builtin_dataclass(_cls: Type[Any]) -> bool:
     class A:
         x: int
 
-    @pydantic.dataclasses.dataclass
+    @pydantic_v1.dataclasses.dataclass
     class B(A):
         y: int
     ```
@@ -471,7 +471,7 @@ def is_builtin_dataclass(_cls: Type[Any]) -> bool:
 
 def make_dataclass_validator(dc_cls: Type['Dataclass'], config: Type[BaseConfig]) -> 'CallableGenerator':
     """
-    Create a pydantic.dataclass from a builtin dataclass to add type validation
+    Create a pydantic_v1.dataclass from a builtin dataclass to add type validation
     and yield the validators
     It retrieves the parameters of the dataclass and forwards them to the newly created dataclass
     """

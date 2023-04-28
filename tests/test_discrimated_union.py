@@ -5,9 +5,9 @@ from typing import Generic, TypeVar, Union
 import pytest
 from typing_extensions import Annotated, Literal
 
-from pydantic import BaseModel, Field, ValidationError
-from pydantic.errors import ConfigError
-from pydantic.generics import GenericModel
+from pydantic_v1 import BaseModel, Field, ValidationError
+from pydantic_v1.errors import ConfigError
+from pydantic_v1.generics import GenericModel
 
 
 def test_discriminated_union_only_union():

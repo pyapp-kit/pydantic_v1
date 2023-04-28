@@ -33,13 +33,13 @@ from uuid import UUID
 import pytest
 from typing_extensions import Annotated, Literal
 
-from pydantic import BaseModel, Extra, Field, ValidationError, confrozenset, conlist, conset, validator
-from pydantic.color import Color
-from pydantic.dataclasses import dataclass
-from pydantic.fields import ModelField
-from pydantic.generics import GenericModel
-from pydantic.networks import AnyUrl, EmailStr, IPvAnyAddress, IPvAnyInterface, IPvAnyNetwork, NameEmail, stricturl
-from pydantic.schema import (
+from pydantic_v1 import BaseModel, Extra, Field, ValidationError, confrozenset, conlist, conset, validator
+from pydantic_v1.color import Color
+from pydantic_v1.dataclasses import dataclass
+from pydantic_v1.fields import ModelField
+from pydantic_v1.generics import GenericModel
+from pydantic_v1.networks import AnyUrl, EmailStr, IPvAnyAddress, IPvAnyInterface, IPvAnyNetwork, NameEmail, stricturl
+from pydantic_v1.schema import (
     get_flat_models_from_model,
     get_flat_models_from_models,
     get_model_name_map,
@@ -47,7 +47,7 @@ from pydantic.schema import (
     model_schema,
     schema,
 )
-from pydantic.types import (
+from pydantic_v1.types import (
     UUID1,
     UUID3,
     UUID4,
@@ -1168,7 +1168,7 @@ def create_testing_submodules():
         os.makedirs(mod_root_path / module_name, exist_ok=True)
         open(mod_root_path / module_name / '__init__.py', 'w').close()
         with open(mod_root_path / module_name / model_name, 'w') as f:
-            f.write('from pydantic import BaseModel\n' 'class Model(BaseModel):\n' '    a: str\n')
+            f.write('from pydantic_v1 import BaseModel\n' 'class Model(BaseModel):\n' '    a: str\n')
     module_name = 'moduled'
     model_name = 'modeld.py'
     os.makedirs(mod_root_path / module_name, exist_ok=True)
@@ -2319,7 +2319,7 @@ def test_multiple_models_with_same_name(create_module):
     module = create_module(
         # language=Python
         """
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 
 class ModelOne(BaseModel):
@@ -2359,7 +2359,7 @@ def test_multiple_enums_with_same_name(create_module):
         """
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 
 class MyEnum(str, Enum):
@@ -2378,7 +2378,7 @@ class MyModel(BaseModel):
         """
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 
 class MyEnum(str, Enum):
