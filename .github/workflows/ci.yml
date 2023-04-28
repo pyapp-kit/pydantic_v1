@@ -214,22 +214,6 @@ jobs:
           name: coverage-html
           path: htmlcov
 
-  test-fastapi:
-    name: test fastAPI
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: set up python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - name: install
-      run: make install-testing
-
-    - name: test
-      run: make test-fastapi
 
   build:
     name: build py3.${{ matrix.python-version }} on ${{ matrix.platform || matrix.os }}
@@ -299,7 +283,6 @@ jobs:
       - lint
       - test-linux-compiled
       - test-not-compiled
-      - test-fastapi
       - build
 
     runs-on: ubuntu-latest

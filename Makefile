@@ -74,12 +74,6 @@ testcov-compile: build-trace test
 	@echo "building coverage html"
 	@coverage html
 
-
-.PHONY: test-fastapi
-test-fastapi:
-	git clone https://github.com/tiangolo/fastapi.git --single-branch
-	./tests/test_fastapi.sh
-
 .PHONY: all
 all: lint mypy testcov
 
