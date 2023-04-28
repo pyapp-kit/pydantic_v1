@@ -3,9 +3,9 @@ from typing import Dict, List, Mapping, Union
 
 import pytest
 
-from pydantic import BaseModel, ValidationError
-from pydantic.dataclasses import dataclass
-from pydantic.tools import parse_file_as, parse_obj_as, parse_raw_as, schema_json_of, schema_of
+from pydantic_v1 import BaseModel, ValidationError
+from pydantic_v1.dataclasses import dataclass
+from pydantic_v1.tools import parse_file_as, parse_obj_as, parse_raw_as, schema_json_of, schema_of
 
 
 @pytest.mark.parametrize('obj,type_,parsed', [('1', int, 1), (['1'], List[int], [1])])

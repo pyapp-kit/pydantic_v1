@@ -3,7 +3,7 @@ from typing import Dict, ForwardRef, List, Optional, Tuple
 
 import pytest
 
-from pydantic import BaseModel, ConfigError, ValidationError
+from pydantic_v1 import BaseModel, ConfigError, ValidationError
 
 
 def test_postponed_annotations(create_module):
@@ -11,7 +11,7 @@ def test_postponed_annotations(create_module):
         # language=Python
         """
 from __future__ import annotations
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Model(BaseModel):
     a: int
@@ -27,7 +27,7 @@ def test_postponed_annotations_optional(create_module):
         """
 from __future__ import annotations
 from typing import Optional
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Model(BaseModel):
     a: Optional[int]
@@ -42,7 +42,7 @@ def test_postponed_annotations_auto_update_forward_refs(create_module):
         # language=Python
         """
 from __future__ import annotations
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Model(BaseModel):
     a: Model
@@ -56,7 +56,7 @@ def test_forward_ref_auto_update_no_model(create_module):
     module = create_module(
         # language=Python
         """
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Foo(BaseModel):
     a: 'Bar'
@@ -73,7 +73,7 @@ class Bar(BaseModel):
 def test_forward_ref_one_of_fields_not_defined(create_module):
     @create_module
     def module():
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Foo(BaseModel):
             foo: 'Foo'
@@ -88,7 +88,7 @@ def test_basic_forward_ref(create_module):
     def module():
         from typing import ForwardRef, Optional
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Foo(BaseModel):
             a: int
@@ -107,7 +107,7 @@ def test_self_forward_ref_module(create_module):
     def module():
         from typing import ForwardRef
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         Foo = ForwardRef('Foo')
 
@@ -126,7 +126,7 @@ def test_self_forward_ref_collection(create_module):
     def module():
         from typing import Dict, List
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Foo(BaseModel):
             a: int = 123
@@ -164,7 +164,7 @@ def test_self_forward_ref_local(create_module):
     def module():
         from typing import ForwardRef
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         def main():
             Foo = ForwardRef('Foo')
@@ -186,7 +186,7 @@ def test_missing_update_forward_refs(create_module):
     def module():
         from typing import ForwardRef
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         Foo = ForwardRef('Foo')
 
@@ -202,8 +202,8 @@ def test_missing_update_forward_refs(create_module):
 def test_forward_ref_dataclass(create_module):
     @create_module
     def module():
-        from pydantic import AnyUrl
-        from pydantic.dataclasses import dataclass
+        from pydantic_v1 import AnyUrl
+        from pydantic_v1.dataclasses import dataclass
 
         @dataclass
         class Dataclass:
@@ -218,8 +218,8 @@ def test_forward_ref_dataclass_with_future_annotations(create_module):
         # language=Python
         """
 from __future__ import annotations
-from pydantic import AnyUrl
-from pydantic.dataclasses import dataclass
+from pydantic_v1 import AnyUrl
+from pydantic_v1.dataclasses import dataclass
 
 @dataclass
 class Dataclass:
@@ -235,7 +235,7 @@ def test_forward_ref_sub_types(create_module):
     def module():
         from typing import ForwardRef, Union
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Leaf(BaseModel):
             a: str
@@ -263,7 +263,7 @@ def test_forward_ref_nested_sub_types(create_module):
     def module():
         from typing import ForwardRef, Tuple, Union
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Leaf(BaseModel):
             a: str
@@ -295,7 +295,7 @@ def test_self_reference_json_schema(create_module):
     def module():
         from typing import List
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Account(BaseModel):
             name: str
@@ -331,7 +331,7 @@ def test_self_reference_json_schema_with_future_annotations(create_module):
         """
 from __future__ import annotations
 from typing import List
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Account(BaseModel):
   name: str
@@ -367,7 +367,7 @@ def test_circular_reference_json_schema(create_module):
     def module():
         from typing import List
 
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Owner(BaseModel):
             account: 'Account'
@@ -415,7 +415,7 @@ def test_circular_reference_json_schema_with_future_annotations(create_module):
         """
 from __future__ import annotations
 from typing import List
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Owner(BaseModel):
   account: Account
@@ -465,7 +465,7 @@ def test_forward_ref_with_field(create_module):
 
         import pytest
 
-        from pydantic import BaseModel, Field
+        from pydantic_v1 import BaseModel, Field
 
         Foo = ForwardRef('Foo')
 
@@ -482,7 +482,7 @@ def test_forward_ref_optional(create_module):
         # language=Python
         """
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic_v1 import BaseModel, Field
 from typing import List, Optional
 
 
@@ -513,11 +513,11 @@ class Filter(BaseModel):
 def test_forward_ref_with_create_model(create_module):
     @create_module
     def module():
-        import pydantic
+        import pydantic_v1
 
-        Sub = pydantic.create_model('Sub', foo='bar', __module__=__name__)
+        Sub = pydantic_v1.create_model('Sub', foo='bar', __module__=__name__)
         assert Sub  # get rid of "local variable 'Sub' is assigned to but never used"
-        Main = pydantic.create_model('Main', sub=('Sub', ...), __module__=__name__)
+        Main = pydantic_v1.create_model('Main', sub=('Sub', ...), __module__=__name__)
         instance = Main(sub={})
         assert instance.sub.dict() == {'foo': 'bar'}
 
@@ -530,8 +530,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pydantic import BaseModel
-from pydantic.typing import Literal
+from pydantic_v1 import BaseModel
+from pydantic_v1.typing import Literal
 
 @dataclass
 class Base:
@@ -561,7 +561,7 @@ def test_discriminated_union_forward_ref(create_module):
 
         from typing_extensions import Literal
 
-        from pydantic import BaseModel, Field
+        from pydantic_v1 import BaseModel, Field
 
         class Pet(BaseModel):
             __root__: Union['Cat', 'Dog'] = Field(..., discriminator='type')  # noqa: F821
@@ -607,7 +607,7 @@ def test_class_var_as_string(create_module):
         """
 from __future__ import annotations
 from typing import ClassVar
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Model(BaseModel):
     a: ClassVar[int]
@@ -621,7 +621,7 @@ def test_json_encoder_str(create_module):
     module = create_module(
         # language=Python
         """
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 
 class User(BaseModel):
@@ -654,7 +654,7 @@ def test_json_encoder_forward_ref(create_module):
     module = create_module(
         # language=Python
         """
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 from typing import ForwardRef, List, Optional
 
 class User(BaseModel):
@@ -696,7 +696,7 @@ def test_pep585_self_referencing_generics():
 def test_pep585_recursive_generics(create_module):
     @create_module
     def module():
-        from pydantic import BaseModel
+        from pydantic_v1 import BaseModel
 
         class Team(BaseModel):
             name: str
@@ -722,7 +722,7 @@ def test_class_var_forward_ref(create_module):
         """
 from __future__ import annotations
 from typing import ClassVar
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class WithClassVar(BaseModel):
     Instances: ClassVar[dict[str, WithClassVar]] = {}

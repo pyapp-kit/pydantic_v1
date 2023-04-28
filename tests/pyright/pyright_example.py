@@ -7,7 +7,7 @@ and all subclasses (including `BaseSettings`), see #2721.
 
 from typing import List
 
-from pydantic import BaseModel, BaseSettings, Field
+from pydantic_v1 import BaseModel, BaseSettings, Field
 
 
 class MyModel(BaseModel):

@@ -1,4 +1,4 @@
-from pydantic import validate_arguments
+from pydantic_v1 import validate_arguments
 
 
 @validate_arguments

@@ -2,9 +2,9 @@ from typing import Generic, Optional, Tuple, TypeVar
 
 import pytest
 
-from pydantic import BaseModel, Extra, Field, ValidationError, create_model, errors, validator
-from pydantic.fields import ModelPrivateAttr
-from pydantic.generics import GenericModel
+from pydantic_v1 import BaseModel, Extra, Field, ValidationError, create_model, errors, validator
+from pydantic_v1.fields import ModelPrivateAttr
+from pydantic_v1.generics import GenericModel
 
 
 def test_create_model():
@@ -15,7 +15,7 @@ def test_create_model():
     assert model.__fields__.keys() == {'foo', 'bar'}
     assert model.__validators__ == {}
     assert model.__config__.__name__ == 'Config'
-    assert model.__module__ == 'pydantic.main'
+    assert model.__module__ == 'pydantic_v1.main'
 
 
 def test_create_model_usage():
@@ -39,7 +39,7 @@ def test_create_model_pickle(create_module):
     def module():
         import pickle
 
-        from pydantic import create_model
+        from pydantic_v1 import create_model
 
         FooModel = create_model('FooModel', foo=(str, ...), bar=123, __module__=__name__)
 

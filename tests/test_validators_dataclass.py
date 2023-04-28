@@ -3,8 +3,8 @@ from typing import List
 
 import pytest
 
-from pydantic import ValidationError, root_validator, validator
-from pydantic.dataclasses import dataclass
+from pydantic_v1 import ValidationError, root_validator, validator
+from pydantic_v1.dataclasses import dataclass
 
 
 def test_simple():

@@ -3,8 +3,8 @@ from typing import Any, Dict, List
 
 import pytest
 
-from pydantic import BaseModel, ConfigError, ValidationError, root_validator
-from pydantic.utils import GetterDict
+from pydantic_v1 import BaseModel, ConfigError, ValidationError, root_validator
+from pydantic_v1.utils import GetterDict
 
 
 def test_getdict():

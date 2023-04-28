@@ -3,8 +3,8 @@ from typing import Any, List, Optional
 
 import pytest
 
-from pydantic import BaseModel, Field, PrivateAttr
-from pydantic.fields import Undefined
+from pydantic_v1 import BaseModel, Field, PrivateAttr
+from pydantic_v1.fields import Undefined
 
 
 class Model(BaseModel):

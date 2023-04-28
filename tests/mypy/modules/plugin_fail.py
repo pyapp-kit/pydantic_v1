@@ -1,8 +1,8 @@
 from typing import Any, Generic, List, Optional, Set, TypeVar, Union
 
-from pydantic import BaseModel, BaseSettings, Extra, Field, validator
-from pydantic.dataclasses import dataclass
-from pydantic.generics import GenericModel
+from pydantic_v1 import BaseModel, BaseSettings, Extra, Field, validator
+from pydantic_v1.dataclasses import dataclass
+from pydantic_v1.generics import GenericModel
 
 
 class Model(BaseModel):

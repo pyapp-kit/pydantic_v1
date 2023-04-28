@@ -4,7 +4,7 @@ Test mypy failure with invalid types.
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, NoneStr
+from pydantic_v1 import BaseModel, NoneStr
 
 
 class Model(BaseModel):

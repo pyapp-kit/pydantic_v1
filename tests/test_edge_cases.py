@@ -7,7 +7,7 @@ from typing import Any, Dict, FrozenSet, Generic, List, Optional, Sequence, Set,
 
 import pytest
 
-from pydantic import (
+from pydantic_v1 import (
     BaseModel,
     BaseSettings,
     Extra,
@@ -20,7 +20,7 @@ from pydantic import (
     validate_model,
     validator,
 )
-from pydantic.fields import Field
+from pydantic_v1.fields import Field
 
 try:
     import cython
@@ -1571,9 +1571,9 @@ def test_exclude_none_with_extra():
 
 
 def test_str_method_inheritance():
-    import pydantic
+    import pydantic_v1
 
-    class Foo(pydantic.BaseModel):
+    class Foo(pydantic_v1.BaseModel):
         x: int = 3
         y: int = 4
 
@@ -1588,9 +1588,9 @@ def test_str_method_inheritance():
 
 
 def test_repr_method_inheritance():
-    import pydantic
+    import pydantic_v1
 
-    class Foo(pydantic.BaseModel):
+    class Foo(pydantic_v1.BaseModel):
         x: int = 3
         y: int = 4
 
@@ -1879,7 +1879,7 @@ def test_cython_function_untouched():
     Model = cython.inline(
         # language=Python
         """
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 
 class Model(BaseModel):
     a = 0.0
@@ -1903,7 +1903,7 @@ def test_resolve_annotations_module_missing(tmp_path):
     # language=Python
     file_path.write_text(
         """
-from pydantic import BaseModel
+from pydantic_v1 import BaseModel
 class User(BaseModel):
     id: int
     name = 'Jane Doe'

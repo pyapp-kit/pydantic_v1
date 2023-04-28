@@ -12,7 +12,7 @@ from uuid import UUID
 
 from typing_extensions import TypedDict
 
-from pydantic import (
+from pydantic_v1 import (
     UUID1,
     BaseConfig,
     BaseModel,
@@ -45,8 +45,8 @@ from pydantic import (
     validate_arguments,
     validator,
 )
-from pydantic.fields import Field, PrivateAttr
-from pydantic.generics import GenericModel
+from pydantic_v1.fields import Field, PrivateAttr
+from pydantic_v1.generics import GenericModel
 
 
 class Flags(BaseModel):

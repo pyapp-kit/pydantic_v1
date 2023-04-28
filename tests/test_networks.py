@@ -1,6 +1,6 @@
 import pytest
 
-from pydantic import (
+from pydantic_v1 import (
     AmqpDsn,
     AnyHttpUrl,
     AnyUrl,
@@ -17,7 +17,7 @@ from pydantic import (
     ValidationError,
     stricturl,
 )
-from pydantic.networks import validate_email
+from pydantic_v1.networks import validate_email
 
 try:
     import email_validator
@@ -263,9 +263,9 @@ def test_at_in_path():
 
 
 def test_fragment_without_query():
-    url = validate_url('https://docs.pydantic.dev/usage/types/#constrained-types')
+    url = validate_url('https://docs.pydantic_v1.dev/usage/types/#constrained-types')
     assert url.scheme == 'https'
-    assert url.host == 'docs.pydantic.dev'
+    assert url.host == 'docs.pydantic_v1.dev'
     assert url.path == '/usage/types/'
     assert url.query is None
     assert url.fragment == 'constrained-types'

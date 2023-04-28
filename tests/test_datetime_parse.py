@@ -11,8 +11,8 @@ from datetime import date, datetime, time, timedelta, timezone
 
 import pytest
 
-from pydantic import BaseModel, ValidationError, condate, errors
-from pydantic.datetime_parse import parse_date, parse_datetime, parse_duration, parse_time
+from pydantic_v1 import BaseModel, ValidationError, condate, errors
+from pydantic_v1.datetime_parse import parse_date, parse_datetime, parse_duration, parse_time
 
 
 def create_tz(minutes):

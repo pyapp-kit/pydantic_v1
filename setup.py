@@ -69,7 +69,7 @@ except FileNotFoundError:
     long_description = description + '.\n\nSee https://pydantic-docs.helpmanual.io/ for documentation.'
 
 # avoid loading the package before requirements are installed:
-version = SourceFileLoader('version', 'pydantic/version.py').load_module()
+version = SourceFileLoader('version', 'pydantic_v1/version.py').load_module()
 
 ext_modules = None
 if not any(arg in sys.argv for arg in ['clean', 'check']) and 'SKIP_CYTHON' not in os.environ:
@@ -86,15 +86,15 @@ if not any(arg in sys.argv for arg in ['clean', 'check']) and 'SKIP_CYTHON' not 
         # Any additional CFLAGS will be appended. Only the last optimization flag will have effect
         os.environ['CFLAGS'] = '-O3 -g0 ' + os.environ.get('CFLAGS', '')
         ext_modules = cythonize(
-            'pydantic/*.py',
-            exclude=['pydantic/generics.py'],
+            'pydantic_v1/*.py',
+            exclude=['pydantic_v1/generics.py'],
             nthreads=int(os.getenv('CYTHON_NTHREADS', 0)),
             language_level=3,
             compiler_directives=compiler_directives,
         )
 
 setup(
-    name='pydantic',
+    name='pydantic-v1',
     version=str(version.VERSION),
     description=description,
     long_description=long_description,
@@ -125,8 +125,8 @@ setup(
     author_email='s@muelcolvin.com',
     url='https://github.com/pydantic/pydantic',
     license='MIT',
-    packages=['pydantic'],
-    package_data={'pydantic': ['py.typed']},
+    packages=['pydantic_v1'],
+    package_data={'pydantic_v1': ['py.typed']},
     python_requires='>=3.7',
     zip_safe=False,  # https://mypy.readthedocs.io/en/latest/installed_packages.html
     install_requires=[
@@ -137,5 +137,5 @@ setup(
         'dotenv': ['python-dotenv>=0.10.4'],
     },
     ext_modules=ext_modules,
-    entry_points={'hypothesis': ['_ = pydantic._hypothesis_plugin']},
+    entry_points={'hypothesis': ['_ = pydantic_v1._hypothesis_plugin']},
 )
