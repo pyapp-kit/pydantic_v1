@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-sources = pydantic_v1 tests docs/build
+sources = pydantic_v1 tests
 isort = isort $(sources)
 black = black -S -l 120 --target-version py38 $(sources)
 
@@ -18,12 +18,8 @@ install-pydantic:
 install-testing: install-pydantic
 	pip install -r tests/requirements-testing.txt
 
-.PHONY: install-docs
-install-docs: install-pydantic
-	pip install -U -r docs/requirements.txt
-
 .PHONY: install
-install: install-testing install-linting install-docs
+install: install-testing install-linting
 	@echo 'installed development requirements'
 
 .PHONY: build-trace
@@ -54,7 +50,7 @@ check-dist:
 
 .PHONY: mypy
 mypy:
-	mypy pydantic_v1 docs/build
+	mypy pydantic_v1
 
 .PHONY: pyupgrade
 pyupgrade:
@@ -78,10 +74,6 @@ testcov-compile: build-trace test
 	@echo "building coverage html"
 	@coverage html
 
-.PHONY: test-examples
-test-examples:
-	@echo "running examples"
-	@find docs/examples -type f -name '*.py' | xargs -I'{}' sh -c 'python {} >/dev/null 2>&1 || (echo "{} failed")'
 
 .PHONY: test-fastapi
 test-fastapi:
@@ -109,18 +101,5 @@ clean:
 	rm -f pydantic_v1/*.c pydantic_v1/*.so
 	python setup.py clean
 	rm -rf site
-	rm -rf docs/_build
-	rm -rf docs/.changelog.md docs/.version.md docs/.tmp_schema_mappings.html
 	rm -rf fastapi/test.db
 	rm -rf coverage.xml
-
-.PHONY: docs
-docs:
-	flake8 --max-line-length=80 docs/examples/
-	python docs/build/main.py
-	mkdocs build
-
-.PHONY: docs-serve
-docs-serve:
-	python docs/build/main.py
-	mkdocs serve
